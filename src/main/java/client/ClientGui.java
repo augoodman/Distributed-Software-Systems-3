@@ -1,11 +1,8 @@
 package client;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
-import javax.swing.JDialog;
-import javax.swing.WindowConstants;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +33,17 @@ public class ClientGui implements OutputPanel.EventHandlers {
   static ClientGui main = new ClientGui();
   static List<String[]> questions = new ArrayList<String[]>();
   static List<Integer[]> clues = new ArrayList<Integer[]>();
-  static String solution = "Pineapple Upside Down Cake"; //hard coded for now
+  static String solution = "Pineapple Upside Down Cake"; //hard coded for now, will come from server
+  static String input;
   static String expectedAnswer = null;
-  static int dimension = 2; //hard coded for now
+  static int dimension = 1; //default value
   static int lifeCount = 3;
-  static int remainingClues = dimension * dimension;
+  static int remainingClues;
   static boolean winFlag = false;
   static boolean loseFlag = false;
   static boolean correctFlag = false;
   static boolean answered = true;
+  static boolean dimensionFlag = false;
 
 
   /**
@@ -88,11 +87,11 @@ public class ClientGui implements OutputPanel.EventHandlers {
 
   /**
    * Creates a new game and set the size of the grid
-   * @param dimension - the size of the grid will be dimension x dimension
    */
-  public void newGame(int dimension) {
-    picturePanel.newGame(dimension);
-    outputPanel.appendOutput("Started new game with a " + dimension + "x" + dimension + " board.");
+  public void newGame() {
+    //picturePanel.newGame(dimension);
+    String[] getDimension = {"Enter dimension of puzzle (2, 3 or 4)."};
+    main.askQuestion(getDimension);
   }
 
   /**
@@ -130,7 +129,7 @@ public class ClientGui implements OutputPanel.EventHandlers {
   @Override
   public void submitClicked() throws IOException {
     // Pulls the input box text
-    String input = outputPanel.getInputText();
+    input = outputPanel.getInputText();
     // if has input
     if (input.length() > 0) {
       // append input to the output panel
@@ -159,9 +158,15 @@ public class ClientGui implements OutputPanel.EventHandlers {
    * @param question - an array containing a question and an answer
    */
   public void askQuestion(String[] question){
-    answered = false;
-    outputPanel.appendOutput(question[0]);
-    expectedAnswer = question[1];
+    if(question.length == 1){
+      outputPanel.appendOutput(question[0]);
+      //dimension =
+    }
+    else {
+      answered = false;
+      outputPanel.appendOutput(question[0]);
+      expectedAnswer = question[1];
+    }
   }
 
   /**
@@ -171,7 +176,22 @@ public class ClientGui implements OutputPanel.EventHandlers {
    * @param answerGiven - the player's response to a question
    */
   public void checkAnswer(String answerGiven) throws IOException {
-    if(solution.equalsIgnoreCase((answerGiven)) && !loseFlag){
+    if(!dimensionFlag){
+      dimension = Integer.parseInt(answerGiven);
+      remainingClues = dimension * dimension;
+      picturePanel.newGame(dimension);
+      outputPanel.appendOutput("Started new game with a " + dimension + "x" + dimension + " board.");
+      dimensionFlag = true;
+      //create clue image grid
+      for(int i = 0; i < dimension; i++) {
+        for (int j = 0; j < dimension; j++) {
+          Integer[] clue = {i, j};
+          clues.add(clue);
+        }
+      }
+      main.askQuestion(questions.remove((int) (Math.random() * (questions.size()))));
+    }
+    else if(solution.equalsIgnoreCase((answerGiven)) && !loseFlag){
       outputPanel.appendOutput("You Win!");
       winFlag = true;
       answered = true;
@@ -181,14 +201,13 @@ public class ClientGui implements OutputPanel.EventHandlers {
         correctFlag = true;
         answered = true;
         Integer[] clue;
-        System.out.println(clues.isEmpty());
         if (!clues.isEmpty()) {
           clue = clues.remove((int) (Math.random() * (remainingClues - 1)));
           int i = clue[0];
           int j = clue[1];
           remainingClues--;
           if (remainingClues >= 0) {
-            main.insertImage("src/main/java/server/img/Pineapple-Upside-down-cake_" + i + "_" + j + ".jpg", i, j);
+            main.insertImage("src/main/java/server/img/Pineapple-Upside-down-cake_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
             if (remainingClues == 0) {
               outputPanel.appendOutput("Out of clues, solve the puzzle!");
             } else {
@@ -211,9 +230,13 @@ public class ClientGui implements OutputPanel.EventHandlers {
     }
   }
 
+  public static String getResponse() {
+    return input;
+  }
+
   public static void main(String[] args) throws IOException {
     // create the frame
-    main.newGame(dimension);
+    main.newGame();
 
     //create question bank
     String[] question0 = {"Question: First president (last name)?", "Washington"};
@@ -235,17 +258,9 @@ public class ClientGui implements OutputPanel.EventHandlers {
     questions.add(question7);
     questions.add(question8);
 
-    //create clue image grid
-    for(int i = 0; i < dimension; i++) {
-      for (int j = 0; j < dimension; j++) {
-        Integer[] clue = {i, j};
-        clues.add(clue);
-      }
-    }
-    System.out.println(clues.size());
 
     //ask the first question
-    main.askQuestion(questions.remove((int)(Math.random() * (questions.size()))));
+    //main.askQuestion(questions.remove((int)(Math.random() * (questions.size()))));
 
     main.show(true);
   }

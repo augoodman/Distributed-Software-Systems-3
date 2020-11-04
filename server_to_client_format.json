@@ -1,0 +1,12 @@
+{"header":
+  {
+  	"query": "question_text"  //string respresenting a question
+  	"feedback": "0/1" //0: incorrect, 1: correct
+    "file": "filename", //file name with dimensions appended
+    "size": "num_bytes", //number of bytes in file, will be 0 if question in correct
+  },
+  "payload": {
+    "byte1": "byte_code" //each byte of data in order
+    //,...
+  }
+}

@@ -23,3 +23,33 @@ task Maker(type: JavaExec) {
   main = 'server.GridMaker'
   standardInput = System.in
 }
+
+task runClient(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  description = "Run Client"
+  main = 'client.TCPClient'
+  // temp args
+  args 'localhost' // host
+  args '9099' // port
+  args 'This is line one.\nThis is line two' // data
+  if (project.hasProperty("host") && project.hasProperty("port") && project.hasProperty("dimension")) {
+    args(project.getProperty('host'), project.getProperty('port'), project.getProperty('dimension'));
+  }
+}
+
+task runServer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  description = "Run Server"
+  main = 'server.TCPServer'
+  // temp args
+  args '9099' // port
+  args '9' // delay
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.json', name: 'json', version: '20200518'
+}

@@ -1,12 +1,10 @@
 package server;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 /**
  * Creates the square image grid used in Assignment 3
