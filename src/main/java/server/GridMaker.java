@@ -32,7 +32,7 @@ public class GridMaker {
   }
   
   /**
-   * Resize a buffered image to a specific size
+   * Resize buffered image to a specific size
    * @param image to resize
    * @param width of result image
    * @param height of result image

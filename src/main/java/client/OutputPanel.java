@@ -130,7 +130,7 @@ public class OutputPanel extends JPanel {
   }
   
   /**
-   * Append a message to the output panel
+   * Append message to the output panel
    * @param message - the message to print
    */
   public void appendOutput(String message) {

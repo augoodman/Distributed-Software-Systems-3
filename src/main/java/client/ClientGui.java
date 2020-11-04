@@ -165,7 +165,7 @@ public class ClientGui implements OutputPanel.EventHandlers {
   }
 
   /**
-   * Logic to advance the game.  Takes in a response from a player, checks for correctness and advances the game as
+   * Logic to advance the game. Takes in a response from a player, checks for correctness and advances the game as
    * appropriate.
    *
    * @param answerGiven - the player's response to a question
