@@ -1,4 +1,4 @@
-package Assignment3Starter;
+package client;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ public class OutputPanel extends JPanel {
     void inputUpdated(String input);
     
     // executes when the submit button is clicked
-    void submitClicked();
+    void submitClicked() throws IOException;
   }
 
   private JTextField input;
@@ -81,7 +82,11 @@ public class OutputPanel extends JPanel {
       public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == submit) {
           for (var handler : handlers) {
-            handler.submitClicked();
+            try {
+              handler.submitClicked();
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
           }
         }
       }
@@ -118,7 +123,7 @@ public class OutputPanel extends JPanel {
 
   /**
    * Register event observers
-   * @param handler
+   * @param handlerObj
    */
   public void addEventHandlers(EventHandlers handlerObj) {
     handlers.add(handlerObj);
