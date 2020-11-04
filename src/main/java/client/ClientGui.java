@@ -160,8 +160,8 @@ public class ClientGui implements OutputPanel.EventHandlers {
    */
   public void askQuestion(String[] question){
     answered = false;
-    outputPanel.appendOutput(question[1]);
-    expectedAnswer = question[2];
+    outputPanel.appendOutput(question[0]);
+    expectedAnswer = question[1];
   }
 
   /**
