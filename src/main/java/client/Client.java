@@ -1,8 +1,13 @@
 package client;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +31,19 @@ import java.util.List;
  * > Does not show when created. show() must be called to show he GUI.
  *
  */
-public class ClientGui implements OutputPanel.EventHandlers {
+public class Client implements OutputPanel.EventHandlers {
   JDialog frame;
   PicturePanel picturePanel;
   OutputPanel outputPanel;
-  static ClientGui main = new ClientGui();
+  GridMaker gridMaker;
+  static Socket s;
+  static Client main = new Client();
+  static DataInputStream in;
+  static DataOutputStream out;
   static List<String[]> questions = new ArrayList<String[]>();
   static List<Integer[]> clues = new ArrayList<Integer[]>();
-  static String solution = "Pineapple Upside Down Cake"; //hard coded for now, will come from server
+  static List<BufferedImage> imageList = new ArrayList<BufferedImage>();
+  static String solution; //hard coded for now, will come from server
   static String input;
   static String expectedAnswer = null;
   static int dimension = 1; //default value
@@ -49,7 +59,7 @@ public class ClientGui implements OutputPanel.EventHandlers {
   /**
    * Construct dialog
    */
-  public ClientGui() {
+  public Client() {
     frame = new JDialog();
     frame.setLayout(new GridBagLayout());
     frame.setMinimumSize(new Dimension(500, 500));
@@ -130,6 +140,7 @@ public class ClientGui implements OutputPanel.EventHandlers {
   public void submitClicked() throws IOException {
     // Pulls the input box text
     input = outputPanel.getInputText();
+
     // if has input
     if (input.length() > 0) {
       // append input to the output panel
@@ -160,7 +171,6 @@ public class ClientGui implements OutputPanel.EventHandlers {
   public void askQuestion(String[] question){
     if(question.length == 1){
       outputPanel.appendOutput(question[0]);
-      //dimension =
     }
     else {
       answered = false;
@@ -177,24 +187,50 @@ public class ClientGui implements OutputPanel.EventHandlers {
    */
   public void checkAnswer(String answerGiven) throws IOException {
     if(!dimensionFlag){
+      String[] args = new String[2];
       dimension = Integer.parseInt(answerGiven);
       remainingClues = dimension * dimension;
       picturePanel.newGame(dimension);
       outputPanel.appendOutput("Started new game with a " + dimension + "x" + dimension + " board.");
       dimensionFlag = true;
-      //create clue image grid
+      out.writeUTF(String.valueOf(dimension));
+      System.out.println("Reading: " + System.currentTimeMillis());
+      byte[] sizeArray = new byte[4];
+      in.read(sizeArray);
+      int size = ByteBuffer.wrap(sizeArray).asIntBuffer().get();
+      byte[] imageArray = new byte[size];
+      in.read(imageArray);
+      BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageArray));
+      if(dimension == 2) {
+        ImageIO.write(image, "jpg", new File("src/main/java/client/img/image2.jpg"));
+        solution = in.readUTF();
+        System.out.println(solution);
+        String source = "src/main/java/client/img/image2.jpg";
+        args[0] = source;
+        args[1] = "2";
+        gridMaker.main(args);
+      }
+      else if(dimension == 3)
+        ImageIO.write(image, "png", new File("src/main/java/client/img/image3.png"));
+      String[] qa = new String[2];
+      qa[0] = in.readUTF();
+      qa[1] = in.readUTF();
+      main.askQuestion(qa);
+      imageList.add(image);
       for(int i = 0; i < dimension; i++) {
         for (int j = 0; j < dimension; j++) {
+          //create clue image grid
           Integer[] clue = {i, j};
           clues.add(clue);
         }
       }
-      main.askQuestion(questions.remove((int) (Math.random() * (questions.size()))));
+      //main.askQuestion(questions.remove((int) (Math.random() * (questions.size()))));
     }
     else if(solution.equalsIgnoreCase((answerGiven)) && !loseFlag){
       outputPanel.appendOutput("You Win!");
       winFlag = true;
       answered = true;
+      s.close();
     }
     else if (expectedAnswer.equalsIgnoreCase(answerGiven) && !loseFlag) {
         outputPanel.appendOutput("Correct!");
@@ -207,12 +243,16 @@ public class ClientGui implements OutputPanel.EventHandlers {
           int j = clue[1];
           remainingClues--;
           if (remainingClues >= 0) {
-            main.insertImage("src/main/java/server/img/Pineapple-Upside-down-cake_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
+            int nextImage = (int) (Math.random() * (imageList.size()));
+            main.insertImage("src/main/java/client/img/image2_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
             if (remainingClues == 0) {
               outputPanel.appendOutput("Out of clues, solve the puzzle!");
             } else {
               outputPanel.appendOutput("Solve the puzzle or answer the next question for another clue!");
-              main.askQuestion(questions.remove((int) (Math.random() * (questions.size()))));
+              String[] qa = new String[2];
+              qa[0] = in.readUTF();
+              qa[1] = in.readUTF();
+              main.askQuestion(qa);
             }
           }
         }
@@ -222,6 +262,7 @@ public class ClientGui implements OutputPanel.EventHandlers {
       if(lifeCount == 0){
         loseFlag = true;
         outputPanel.appendOutput(("Incorrect! You Lose!"));
+        s.close();
       }
       else if (!loseFlag){
         outputPanel.appendOutput(("Incorrect! You have " + lifeCount + " chance(s) left!"));
@@ -230,38 +271,66 @@ public class ClientGui implements OutputPanel.EventHandlers {
     }
   }
 
-  public static String getResponse() {
-    return input;
-  }
-
   public static void main(String[] args) throws IOException {
     // create the frame
-    main.newGame();
+    if (args.length != 2) {
+      System.out.println("Wrong number of arguments:\ngradle runClient --args=\"host port\"");
+      System.exit(0);
+    }
+    String host = args[0];
+    int port = 9099; // default port
+    try {
+      port = Integer.parseInt(args[1]);
+    } catch (NumberFormatException nfe) {
+      System.out.println("port must be integer");
+      System.exit(2);
+    }
+    //2) create a socket using tcp
+    try{
+      s = new Socket(host, port);
+      in = new DataInputStream( s.getInputStream());
+      //4) establish connection to server
+      out = new DataOutputStream( s.getOutputStream());
+      //5) send data
+      //6) receive data
+      main.newGame();
 
-    //create question bank
-    String[] question0 = {"Question: First president (last name)?", "Washington"};
-    String[] question1 = {"Question: 13 * 3 =", "39"};
-    String[] question2 = {"Question: Capital of California?", "Sacramento"};
-    String[] question3 = {"Question: SER 321 Instructor (last name)?", "Mehlhase"};
-    String[] question4 = {"Question: Best School? (3 letters)", "ASU"};
-    String[] question5 = {"Question: What is Pi? (round nearest hundredth)", "3.14"};
-    String[] question6 = {"Question: What letter is missing in 'Softwar_ _ngin__r'?", "E"};
-    String[] question7 = {"Question: What animal barks?", "Dog"};
-    String[] question8 = {"Question: Number of letters in alphabet?", "26"};
-    questions.add(question0);
-    questions.add(question1);
-    questions.add(question2);
-    questions.add(question3);
-    questions.add(question4);
-    questions.add(question5);
-    questions.add(question6);
-    questions.add(question7);
-    questions.add(question8);
+      //create question bank
+      String[] question0 = {"Question: First president (last name)?", "Washington"};
+      String[] question1 = {"Question: 13 * 3 =", "39"};
+      String[] question2 = {"Question: Capital of California?", "Sacramento"};
+      String[] question3 = {"Question: SER 321 Instructor (last name)?", "Mehlhase"};
+      String[] question4 = {"Question: Best School? (3 letters)", "ASU"};
+      String[] question5 = {"Question: What is Pi? (round nearest hundredth)", "3.14"};
+      String[] question6 = {"Question: What letter is missing in 'Softwar_ _ngin__r'?", "E"};
+      String[] question7 = {"Question: What animal barks?", "Dog"};
+      String[] question8 = {"Question: Number of letters in alphabet?", "26"};
+      questions.add(question0);
+      questions.add(question1);
+      questions.add(question2);
+      questions.add(question3);
+      questions.add(question4);
+      questions.add(question5);
+      questions.add(question6);
+      questions.add(question7);
+      questions.add(question8);
 
+      main.show(true);    //1) fetch client params (host, port, dimensions)
 
-    //ask the first question
-    //main.askQuestion(questions.remove((int)(Math.random() * (questions.size()))));
-
-    main.show(true);
+    } catch (UnknownHostException e) {
+      System.out.println("Socket:"+e.getMessage());
+    } catch (EOFException e) {
+      System.out.println("EOF:"+e.getMessage());
+    } catch (IOException e) {
+      System.out.println("readline:"+e.getMessage());
+    } finally {
+      if(s!=null)
+        try {
+          //8) close the socket
+          s.close();
+        } catch (IOException e) {
+          System.out.println("close:"+e.getMessage());
+        }
+    }
   }
 }

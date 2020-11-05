@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

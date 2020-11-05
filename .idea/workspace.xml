@@ -23,18 +23,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="108cd0e5-d5d7-4ed4-819a-1514ea69e726" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/json.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/client/TCPClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/client/json.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/server/TCPServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Assignment3Starter/ClientGui.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Assignment3Starter/GridMaker.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Assignment3Starter/OutputPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Assignment3Starter/PicturePanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/client/ClientGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/ClientGui.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/GridMaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/GridMaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_to_server_format.json" beforeDir="false" afterPath="$PROJECT_DIR$/client_to_server_format.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server_to_client_format.json" beforeDir="false" afterPath="$PROJECT_DIR$/server_to_client_format.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/client/ClientGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/client/TCPClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/GridMaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/GridMaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/TCPServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_0_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_0_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_1_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_1_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_0_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_0_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_0_2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_1_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_1_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_1_2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_2_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_2_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_2_2.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,8 +110,8 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="ClientGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="client.ClientGui" />
+    <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="client.Client" />
       <module name="Assignment_3.main" />
       <extension name="coverage">
         <pattern>
@@ -110,11 +123,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.ClientGui" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -137,6 +145,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2685" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1604435112355">
@@ -147,22 +156,22 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2586" y="261" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604518758358" />
-    <state width="1877" height="179" key="GridCell.Tab.0.bottom" timestamp="1604528999796">
+    <state width="1877" height="179" key="GridCell.Tab.0.bottom" timestamp="1604538693161">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="179" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604528999796" />
-    <state width="1877" height="179" key="GridCell.Tab.0.center" timestamp="1604528999796">
+    <state width="1877" height="179" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604538693161" />
+    <state width="1877" height="179" key="GridCell.Tab.0.center" timestamp="1604538693161">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="179" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604528999796" />
-    <state width="1877" height="179" key="GridCell.Tab.0.left" timestamp="1604528999796">
+    <state width="1877" height="179" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604538693161" />
+    <state width="1877" height="179" key="GridCell.Tab.0.left" timestamp="1604538693160">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="179" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604528999796" />
-    <state width="1877" height="179" key="GridCell.Tab.0.right" timestamp="1604528999796">
+    <state width="1877" height="179" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604538693160" />
+    <state width="1877" height="179" key="GridCell.Tab.0.right" timestamp="1604538693161">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="179" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604528999796" />
+    <state width="1877" height="179" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1604538693161" />
     <state x="2566" y="119" key="SettingsEditor" timestamp="1604519533097">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
