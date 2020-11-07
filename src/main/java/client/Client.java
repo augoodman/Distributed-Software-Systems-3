@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The ClientGui class is a GUI frontend that displays an image grid, an input text box,
- * a button, and a text area for status. 
+ * The Client class contains client logic and is combined with the GUI frontend that
+ * displays an image grid, an input text box, a button, and a text area for status.
  *
  * Methods of Interest
  * ----------------------
@@ -25,6 +25,9 @@ import java.util.List;
  * insertImage(String filename, int row, int col) - Inserts an image into the grid
  * submitClicked() - Button handler for the submit button in the output panel
  * inputUpdated() - Tracks the current state of the input text box
+ * askQuestion(String[] question) - Prints a question to the GUI for the player to answer
+ * checkAnswer(String answerGiver) - Logic to advance the game. Takes in a response from
+ * a player, checks for correctness and advances the game as appropriate.
  *
  * Notes
  * -----------
@@ -40,10 +43,12 @@ public class Client implements OutputPanel.EventHandlers {
   static Client main = new Client();
   static DataInputStream in;
   static DataOutputStream out;
-  static List<String[]> questions = new ArrayList<String[]>();
+  static String clientProtocolHeader;
+  static String serverProtocolHeader;
+  static String delim = "[ ]+";
   static List<Integer[]> clues = new ArrayList<Integer[]>();
   static List<BufferedImage> imageList = new ArrayList<BufferedImage>();
-  static String solution; //hard coded for now, will come from server
+  static String solution;
   static String input;
   static String expectedAnswer = null;
   static int dimension = 1; //default value
@@ -54,7 +59,9 @@ public class Client implements OutputPanel.EventHandlers {
   static boolean correctFlag = false;
   static boolean answered = true;
   static boolean dimensionFlag = false;
-
+  static int numQuestions = 0;
+  static int numQuestionsRight = 0;
+  static int numQuestionsWrong = 0;
 
   /**
    * Construct dialog
@@ -118,8 +125,6 @@ public class Client implements OutputPanel.EventHandlers {
     try {
       // insert the image
       if (picturePanel.insertImage(filename, row, col)) {
-        // put status in output
-        //outputPanel.appendOutput("Inserting " + filename + " in position (" + row + ", " + col + ")");
         return true;
       }
       error = "File(\"" + filename + "\") not found.";
@@ -193,8 +198,16 @@ public class Client implements OutputPanel.EventHandlers {
       picturePanel.newGame(dimension);
       outputPanel.appendOutput("Started new game with a " + dimension + "x" + dimension + " board.");
       dimensionFlag = true;
-      out.writeUTF(String.valueOf(dimension));
-      System.out.println("Reading: " + System.currentTimeMillis());
+      clientProtocolHeader = "c " + dimension;
+      out.writeUTF(clientProtocolHeader);
+      serverProtocolHeader = in.readUTF();
+      String[] tokens = serverProtocolHeader.split(delim);
+      if(tokens[0].equalsIgnoreCase("s")){
+        System.out.println("Server data received.");
+        numQuestions = Integer.parseInt(tokens[1]);
+        System.out.println(numQuestions);
+      }
+      System.out.println("Reading in image.");
       byte[] sizeArray = new byte[4];
       in.read(sizeArray);
       int size = ByteBuffer.wrap(sizeArray).asIntBuffer().get();
@@ -204,7 +217,7 @@ public class Client implements OutputPanel.EventHandlers {
       if(dimension == 2) {
         ImageIO.write(image, "jpg", new File("src/main/java/client/img/image2.jpg"));
         solution = in.readUTF();
-        System.out.println(solution);
+        //System.out.println(solution);
         String source = "src/main/java/client/img/image2.jpg";
         args[0] = source;
         args[1] = "2";
@@ -213,7 +226,7 @@ public class Client implements OutputPanel.EventHandlers {
       else if(dimension == 3) {
         ImageIO.write(image, "jpg", new File("src/main/java/client/img/image3.jpg"));
         solution = in.readUTF();
-        System.out.println(solution);
+        //System.out.println(solution);
         String source = "src/main/java/client/img/image3.jpg";
         args[0] = source;
         args[1] = "3";
@@ -222,7 +235,7 @@ public class Client implements OutputPanel.EventHandlers {
       else {
         ImageIO.write(image, "jpg", new File("src/main/java/client/img/image4.jpg"));
         solution = in.readUTF();
-        System.out.println(solution);
+        //System.out.println(solution);
         String source = "src/main/java/client/img/image4.jpg";
         args[0] = source;
         args[1] = "4";
@@ -233,23 +246,25 @@ public class Client implements OutputPanel.EventHandlers {
       qa[1] = in.readUTF();
       main.askQuestion(qa);
       imageList.add(image);
-      for(int i = 0; i < dimension; i++) {
+      for (int i = 0; i < dimension; i++) {
         for (int j = 0; j < dimension; j++) {
           //create clue image grid
           Integer[] clue = {i, j};
           clues.add(clue);
         }
       }
-      //main.askQuestion(questions.remove((int) (Math.random() * (questions.size()))));
     }
     else if(solution.equalsIgnoreCase((answerGiven)) && !loseFlag){
       outputPanel.appendOutput("You Win!");
+      outputPanel.appendOutput(("You got " + numQuestionsRight + " questions right!"));
+      outputPanel.appendOutput(("You got " + numQuestionsWrong + " questions wrong!"));
       winFlag = true;
       answered = true;
       s.close();
     }
     else if (expectedAnswer.equalsIgnoreCase(answerGiven) && !loseFlag) {
         outputPanel.appendOutput("Correct!");
+        numQuestionsRight++;
         correctFlag = true;
         answered = true;
         Integer[] clue;
@@ -273,6 +288,7 @@ public class Client implements OutputPanel.EventHandlers {
               qa[0] = in.readUTF();
               qa[1] = in.readUTF();
               main.askQuestion(qa);
+              numQuestions--;
             }
           }
         }
@@ -282,10 +298,13 @@ public class Client implements OutputPanel.EventHandlers {
       if(lifeCount == 0){
         loseFlag = true;
         outputPanel.appendOutput(("The solution was: '" + solution + "'. You Lose!"));
+        outputPanel.appendOutput(("You got " + numQuestionsRight + " questions right!"));
+        outputPanel.appendOutput(("You got " + numQuestionsWrong + " questions wrong!"));
         s.close();
       }
       else if (!loseFlag){
         outputPanel.appendOutput(("Incorrect! You have " + lifeCount + " chance(s) left!"));
+        numQuestionsWrong++;
         answered = true;
       }
     }
@@ -314,9 +333,7 @@ public class Client implements OutputPanel.EventHandlers {
       //5) send data
       //6) receive data
       main.newGame();
-
-      main.show(true);    //1) fetch client params (host, port, dimensions)
-
+      main.show(true);
     } catch (UnknownHostException e) {
       System.out.println("Socket:"+e.getMessage());
     } catch (EOFException e) {

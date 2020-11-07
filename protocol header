@@ -1,0 +1,5 @@
+protocol header
+[0] type:client/server
+[1] dimensions/num_questions : 2-4/4-16
+[2] solution : "solution here" //server only
+[3] question[] : answer[] //server only

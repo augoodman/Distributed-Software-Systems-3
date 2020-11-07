@@ -8,14 +8,22 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The Server class contains server logic and provides data necessary for client game.
+ *
+ */
 public class Server {
 	static int dimension;
 	static boolean haveDimension = false;
 	static List<String[]> questions = new ArrayList<String[]>();
+	static List<String> images = new ArrayList<String>();
+	static ByteArrayInputStream bis;
+	static ObjectInputStream ois;
+	static String clientProtocolHeader;
+	static String serverProtocolHeader;
+	static String delim = "[ ]+";
 
 	public static void main (String args[]) {
-
 		//create question bank
 		String[] question0 = {"Question: What is the first president's last name?", "Washington"};
 		String[] question1 = {"Question: 13 * 3 =", "39"};
@@ -49,6 +57,13 @@ public class Server {
 		questions.add(question13);
 		questions.add(question14);
 		questions.add(question15);
+		//create image bank
+		String image1 = "src/main/java/server/img/Holy-Water.jpg";
+		String image2 = "src/main/java/server/img/Bucket-List.jpg";
+		String image3 = "src/main/java/server/img/I-Believe-In-You.jpg";
+		images.add(image1);
+		images.add(image2);
+		images.add(image3);
 		ServerSocket listenSocket = null;
 		//1) fetch server params
 		if (args.length != 1) {
@@ -87,13 +102,19 @@ public class Server {
 	}
 }
 
+/**
+ * The Connection class implements data transfer to client.
+ *
+ * Methods of Interest
+ * ----------------------
+ * void run() main function of Connection class that contains data transfer logic.
+ */
 class Connection extends Thread {
 	DataInputStream in;
 	DataOutputStream out;
 	Socket clientSocket;
 	long __msDelay;
 	BufferedImage image;
-
 	public Connection (Socket aClientSocket, long msDelay) {
 		try {
 			clientSocket = aClientSocket;
@@ -108,46 +129,58 @@ class Connection extends Thread {
 	}
 	public void run(){
 		try {
-			String data = in.readUTF();	 // read a line of data from the stream
-			if((data.equals("2") || data.equals("3") || data.equals("4")) && !Server.haveDimension){
+			//read in protocol header from client
+			Server.clientProtocolHeader = in.readUTF();
+			//parse values from header
+			String[] tokens = Server.clientProtocolHeader.split(Server.delim);
+			if(tokens[0].equalsIgnoreCase("c")){
+				System.out.println("Client data received.");
+				Server.dimension = Integer.parseInt(tokens[1]);
+			}
+			Server.serverProtocolHeader = "s " + String.valueOf(Server.dimension * Server.dimension) + " ";
+			out.writeUTF(Server.serverProtocolHeader);
+			if((Server.dimension == 2 || Server.dimension == 3 || Server.dimension == 4) && !Server.haveDimension){
 				Server.haveDimension = true;
-				Server.dimension = Integer.parseInt(data);
-				System.out.println("Dimension: " + data);
+				System.out.println("Dimension: " + Server.dimension);
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				ByteBuffer byteBuffer = ByteBuffer.allocate(4);
 				File inputFile;
 				String solution;
+				String rebus = Server.images.remove((int) (Math.random() * (Server.images.size())));
+				if(rebus.equals("src/main/java/server/img/Holy-Water.jpg"))
+					solution = "Holy Water";
+				else if(rebus.equals("src/main/java/server/img/Bucket-List.jpg"))
+					solution = "Bucket List";
+				else
+					solution = "I Believe In You";
 				if(Server.dimension == 2) {
-					inputFile = new File("src/main/java/server/img/Holy-Water.jpg");
+					inputFile = new File(rebus);
 					image = ImageIO.read(inputFile);
 					ImageIO.write(image, "jpg", byteArrayOutputStream);
 					byte[] size = byteBuffer.putInt(byteArrayOutputStream.size()).array();
 					out.write(size);
 					out.write(byteArrayOutputStream.toByteArray());
 					out.flush();
-					solution = "Holy Water";
 					out.writeUTF(solution);
 				}
 				else if(Server.dimension == 3){
-					inputFile = new File("src/main/java/server/img/Bucket-List.jpg");
+					inputFile = new File(rebus);
 					image = ImageIO.read(inputFile);
 					ImageIO.write(image, "jpg", byteArrayOutputStream);
 					byte[] size = byteBuffer.putInt(byteArrayOutputStream.size()).array();
 					out.write(size);
 					out.write(byteArrayOutputStream.toByteArray());
 					out.flush();
-					solution = "Bucket List";
 					out.writeUTF(solution);
 				}
 				else {
-					inputFile = new File("src/main/java/server/img/I-Believe-In-You.jpg");
+					inputFile = new File(rebus);
 					image = ImageIO.read(inputFile);
 					ImageIO.write(image, "jpg", byteArrayOutputStream);
 					byte[] size = byteBuffer.putInt(byteArrayOutputStream.size()).array();
 					out.write(size);
 					out.write(byteArrayOutputStream.toByteArray());
 					out.flush();
-					solution = "I Believe In You";
 					out.writeUTF(solution);
 				}
 				String[] qa = new String[2];
@@ -159,9 +192,7 @@ class Connection extends Thread {
 				clientSocket.close();
 			}
 			else {
-				System.out.println("Read " + data);
 				Thread.sleep(__msDelay);
-				out.writeUTF(data);
 			}
 		} catch (EOFException e) {
 			System.out.println("EOF:"+e.getMessage());
