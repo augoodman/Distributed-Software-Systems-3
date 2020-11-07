@@ -23,31 +23,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="108cd0e5-d5d7-4ed4-819a-1514ea69e726" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_to_server_format.json" beforeDir="false" afterPath="$PROJECT_DIR$/client_to_server_format.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server_to_client_format.json" beforeDir="false" afterPath="$PROJECT_DIR$/server_to_client_format.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/client/ClientGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/client/TCPClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/GridMaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/GridMaker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/TCPServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_0_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_0_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_1_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake_1_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_0_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_0_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_0_2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_1_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_1_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_1_2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_2_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_2_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/To-Funny-For-Words1_2_2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Pineapple-Upside-down-cake.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/img/Swim-Under-Water.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

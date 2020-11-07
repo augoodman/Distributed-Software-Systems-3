@@ -15,15 +15,24 @@ public class Server {
 	static List<String[]> questions = new ArrayList<String[]>();
 
 	public static void main (String args[]) {
-		String[] question0 = {"Question: First president (last name)?", "Washington"};
+
+		//create question bank
+		String[] question0 = {"Question: What is the first president's last name?", "Washington"};
 		String[] question1 = {"Question: 13 * 3 =", "39"};
-		String[] question2 = {"Question: Capital of California?", "Sacramento"};
-		String[] question3 = {"Question: SER 321 Instructor (last name)?", "Mehlhase"};
-		String[] question4 = {"Question: Best School? (3 letters)", "ASU"};
-		String[] question5 = {"Question: What is Pi? (round nearest hundredth)", "3.14"};
-		String[] question6 = {"Question: What letter is missing in 'Softwar_ _ngin__r'?", "E"};
-		String[] question7 = {"Question: What animal barks?", "Dog"};
+		String[] question2 = {"Question: What is the capital of California?", "Sacramento"};
+		String[] question3 = {"Question: Who is the instructor of SER 321 (last name)?", "Mehlhase"};
+		String[] question4 = {"Question: What is the best school ever? (3 letters)", "ASU"};
+		String[] question5 = {"Question: Define is Pi? (round nearest hundredth)", "3.14"};
+		String[] question6 = {"Question: What letter is missing in the phrase: 'Softwar_ _ngin__r'?", "E"};
+		String[] question7 = {"Question: Which type of animal barks?", "Dog"};
 		String[] question8 = {"Question: Number of letters in alphabet?", "26"};
+		String[] question9 = {"Question: How many hours of sleep should you get each night?", "8"};
+		String[] question10 = {"Question: How many states are there?", "50"};
+		String[] question11 = {"Question: Was 2020 a terrible year (yes or no)?", "Yes"};
+		String[] question12 = {"Question: Was this assignment too long and complex (yes or no)?", "Yes"};
+		String[] question13 = {"Question: True or False: Megadeth is awesome! (hint: true)", "True"};
+		String[] question14 = {"Question: The sky is which color?", "Blue"};
+		String[] question15 = {"Question: Enter the word 'answer'?", "Answer"};
 		questions.add(question0);
 		questions.add(question1);
 		questions.add(question2);
@@ -33,6 +42,13 @@ public class Server {
 		questions.add(question6);
 		questions.add(question7);
 		questions.add(question8);
+		questions.add(question9);
+		questions.add(question10);
+		questions.add(question11);
+		questions.add(question12);
+		questions.add(question13);
+		questions.add(question14);
+		questions.add(question15);
 		ServerSocket listenSocket = null;
 		//1) fetch server params
 		if (args.length != 1) {
@@ -102,24 +118,37 @@ class Connection extends Thread {
 				File inputFile;
 				String solution;
 				if(Server.dimension == 2) {
-					inputFile = new File("src/main/java/server/img/Swim-Under-Water.jpg");
+					inputFile = new File("src/main/java/server/img/Holy-Water.jpg");
 					image = ImageIO.read(inputFile);
 					ImageIO.write(image, "jpg", byteArrayOutputStream);
 					byte[] size = byteBuffer.putInt(byteArrayOutputStream.size()).array();
 					out.write(size);
 					out.write(byteArrayOutputStream.toByteArray());
 					out.flush();
-					solution = "Swim Under Water";
+					solution = "Holy Water";
 					out.writeUTF(solution);
 				}
 				else if(Server.dimension == 3){
-					inputFile = new File("src/main/java/server/img/To-Funny-For-Words1.png");
+					inputFile = new File("src/main/java/server/img/Bucket-List.jpg");
 					image = ImageIO.read(inputFile);
 					ImageIO.write(image, "jpg", byteArrayOutputStream);
 					byte[] size = byteBuffer.putInt(byteArrayOutputStream.size()).array();
 					out.write(size);
 					out.write(byteArrayOutputStream.toByteArray());
 					out.flush();
+					solution = "Bucket List";
+					out.writeUTF(solution);
+				}
+				else {
+					inputFile = new File("src/main/java/server/img/I-Believe-In-You.jpg");
+					image = ImageIO.read(inputFile);
+					ImageIO.write(image, "jpg", byteArrayOutputStream);
+					byte[] size = byteBuffer.putInt(byteArrayOutputStream.size()).array();
+					out.write(size);
+					out.write(byteArrayOutputStream.toByteArray());
+					out.flush();
+					solution = "I Believe In You";
+					out.writeUTF(solution);
 				}
 				String[] qa = new String[2];
 				while(!Server.questions.isEmpty()) {

@@ -210,8 +210,24 @@ public class Client implements OutputPanel.EventHandlers {
         args[1] = "2";
         gridMaker.main(args);
       }
-      else if(dimension == 3)
-        ImageIO.write(image, "png", new File("src/main/java/client/img/image3.png"));
+      else if(dimension == 3) {
+        ImageIO.write(image, "jpg", new File("src/main/java/client/img/image3.jpg"));
+        solution = in.readUTF();
+        System.out.println(solution);
+        String source = "src/main/java/client/img/image3.jpg";
+        args[0] = source;
+        args[1] = "3";
+        gridMaker.main(args);
+      }
+      else {
+        ImageIO.write(image, "jpg", new File("src/main/java/client/img/image4.jpg"));
+        solution = in.readUTF();
+        System.out.println(solution);
+        String source = "src/main/java/client/img/image4.jpg";
+        args[0] = source;
+        args[1] = "4";
+        gridMaker.main(args);
+      }
       String[] qa = new String[2];
       qa[0] = in.readUTF();
       qa[1] = in.readUTF();
@@ -243,8 +259,12 @@ public class Client implements OutputPanel.EventHandlers {
           int j = clue[1];
           remainingClues--;
           if (remainingClues >= 0) {
-            int nextImage = (int) (Math.random() * (imageList.size()));
-            main.insertImage("src/main/java/client/img/image2_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
+            if(dimension == 2)
+              main.insertImage("src/main/java/client/img/image2_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
+            else if (dimension == 3)
+              main.insertImage("src/main/java/client/img/image3_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
+            else
+              main.insertImage("src/main/java/client/img/image4_" + i + "_" + j + ".jpg", i, j); //image and path will come from server
             if (remainingClues == 0) {
               outputPanel.appendOutput("Out of clues, solve the puzzle!");
             } else {
@@ -261,7 +281,7 @@ public class Client implements OutputPanel.EventHandlers {
       lifeCount--;
       if(lifeCount == 0){
         loseFlag = true;
-        outputPanel.appendOutput(("Incorrect! You Lose!"));
+        outputPanel.appendOutput(("The solution was: '" + solution + "'. You Lose!"));
         s.close();
       }
       else if (!loseFlag){
@@ -294,26 +314,6 @@ public class Client implements OutputPanel.EventHandlers {
       //5) send data
       //6) receive data
       main.newGame();
-
-      //create question bank
-      String[] question0 = {"Question: First president (last name)?", "Washington"};
-      String[] question1 = {"Question: 13 * 3 =", "39"};
-      String[] question2 = {"Question: Capital of California?", "Sacramento"};
-      String[] question3 = {"Question: SER 321 Instructor (last name)?", "Mehlhase"};
-      String[] question4 = {"Question: Best School? (3 letters)", "ASU"};
-      String[] question5 = {"Question: What is Pi? (round nearest hundredth)", "3.14"};
-      String[] question6 = {"Question: What letter is missing in 'Softwar_ _ngin__r'?", "E"};
-      String[] question7 = {"Question: What animal barks?", "Dog"};
-      String[] question8 = {"Question: Number of letters in alphabet?", "26"};
-      questions.add(question0);
-      questions.add(question1);
-      questions.add(question2);
-      questions.add(question3);
-      questions.add(question4);
-      questions.add(question5);
-      questions.add(question6);
-      questions.add(question7);
-      questions.add(question8);
 
       main.show(true);    //1) fetch client params (host, port, dimensions)
 
