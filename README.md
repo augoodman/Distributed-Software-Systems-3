@@ -1,11 +1,10 @@
 # Assignment 3 README
 
 ## Description
-
 Implements a Rebus Puzzle game over a network.
 TiledRebusTCP uses TCP to transfer data.
 TiledRebusUDP was not completed in time for submission.
-Youtube link: 
+Youtube link: https://youtu.be/pS_CTz0ZE7o
 
 ## Command Line Arguments
 First spin up the game server using:
